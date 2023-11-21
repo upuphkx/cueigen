@@ -1,2 +1,2 @@
-# cueigen
+# cuEIGEN
 plan to support cuda common libraries
