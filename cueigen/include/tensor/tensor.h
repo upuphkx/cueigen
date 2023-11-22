@@ -6,54 +6,83 @@ namespace cueigen{
 namespace tensor{
 
 
-class Shape {
-public:
-    Shape();
-    Shape(Shape& other);
-    Shape(Shape&& other);
-    Shape operator=(Shape& other);
-    Shape operator=(Shape&& other);;
-    ~Shape();
-private:
-    uint32_t dims_;
-};
 
-class Stride {
+class Tensor : public Node{
 public:
-    Stride();
-    Stride(Shape& Stride);
-    ~Stride();
-private:
-    uint32_t dims_;
-};
+    virtual ~Tensor(){
+        if(shape_) {
+            delete shape_;
+            shape_ = nullptr;
+        }
+        if(stride_) {
+            delete stride_;
+            stride_ = nullptr;
+        }
+    }
+    Tensor(){}
 
-class Tensor {
-public:
-    virtual ~Tensor(){}
-    Tensor();
-    Tensor(Shape shape, Stride stride, void* buffer, uint32_t dims, kTensorMemoryType_t mem_type);
+    Tensor(Shape* shape, Stride* stride, void* buffer, uint32_t dims, kTensorMemoryType_t mem_type);
+
     Tensor(Tensor& tensor);
+
     Tensor(Tensor&& tensor);
+
     Tensor operator=(Tensor& other);
+
     Tensor operator=(Tensor&& other);
 
-    void* getBuffer();
-    Shape* getShape();
-    Stride* getStride();
+    std::string getGraphNodeName() override {
+        return std::string("Tensor Node");
+    }
+    kGraphNodeType_t getGraphNodeType() override {
+        return kGraphNodeType_t::kTensor;
+    }
+
+    const void* getBuffer() const;
+
+    const Shape* getShape() const;
+
+    const Stride* getStride() const;
+
+    const uint32_t& getDims() const;
+
+    const size_t getBufferBytes() const;
+
+    const uint32_t getElementNum() const;
+
+    const kTensorMemoryType_t& getMemType() const;
+
+    const kTensorDataType_t& getDataType() const;
 
     Tensor* setBuffer(void* buffer);
+
     Tensor* setShape(Shape* shape);
-    Tensor* setStride(Stride* Stride);
+
+    Tensor* setStride(Stride* stride);
+
+    template<typename DataType> 
+    Tensor* setShape(const std::initializer_list<DataType>& shape){
+        shape_ = new Shape(shape);
+    }
+
+    template<typename DataType> 
+    Tensor* setStride(const std::initializer_list<DataType>& stride){
+        stride_ = new Stride(stride);
+    }
+
+    Tensor* setDims(const uint32_t& dims);
+    Tensor* setMemType(const kTensorMemoryType_t& mem_type);
+    Tensor* setDataType(const kTensorDataType_t& data_type);
+
+    void printTensorInfo() const;
+    std::string toString() const;
 private:
-    Shape shape_;
-    Stride stride_;
-    void* buffer_;
-    uint32_t dims_;
-    kTensorMemoryType_t mem_type_;
-
-
-
-
+    Shape* shape_{nullptr};
+    Stride* stride_{nullptr};
+    void* buffer_{nullptr};
+    uint32_t dims_{0};
+    kTensorDataType_t data_type_{kDataTypeNotSpecify};
+    kTensorMemoryType_t mem_type_{kMemTypeNotSpecify};
 };
 
 }

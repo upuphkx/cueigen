@@ -8,11 +8,11 @@ namespace log{
 static uint32_t cueigen_msg_level = 0; //default close msg
 static uint32_t tab_count = 0; //default 0
 
-void CUEIGEN_DEBUG_INFO(){
+inline void CUEIGEN_DEBUG_INFO(){
     std::cout << std::endl;
 }
 template<typename Ts, typename ... Rs>
-void CUEIGEN_DEBUG_INFO(const Ts& ts, const Rs& ... rs){
+inline void CUEIGEN_DEBUG_INFO(const Ts& ts, const Rs& ... rs){
     std::cout << ts << " ";
     CUEIGEN_DEBUG_INFO(rs...);
 }
@@ -24,7 +24,7 @@ uint32_t inline cueigen_log_level(){
     }
 }
 
-void cueigen_log(const std::string& log){
+inline void cueigen_log(const std::string& log){
     std::string s_tab = "";
     for (uint32_t iter = 0; iter < tab_count; iter++) s_tab += "    ";
     CUEIGEN_DEBUG_INFO(s_tab + log);
@@ -40,5 +40,6 @@ void cueigen_log(const std::string& log){
 #define CUEIGEN_MSG_FOOTER(expr) \
     tab_count--;                 \
     cueigen_log("-call "#expr);   
+
 }
 }
