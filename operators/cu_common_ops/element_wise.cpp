@@ -3,10 +3,12 @@
 namespace cueigen{
 namespace op{
 
-class Element_wise : private Op{
+class Element_wise : public Op{
 public:
+    ~Element_wise(){CUEIGEN_DEBUG_INFO("call ~Element_wise");}
+    
      std::string getName()  override{
-        return "element_wise";
+        return "Element_wise";
      }
 
      kOpNodeType_t getType() override{
@@ -78,5 +80,8 @@ public:
 private:
 
 };
+
+RegOp(Element_wise);
+
 }
 }
