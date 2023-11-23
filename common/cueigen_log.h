@@ -8,19 +8,23 @@ namespace log{
 static uint32_t cueigen_msg_level = 0; //default close msg
 static uint32_t tab_count = 0; //default 0
 
+uint32_t inline cueigen_log_level(){
+    char* is_msg = getenv("CUEIGEN_MSG_LEVEL");
+    if (nullptr!=is_msg){
+        cueigen_msg_level = std::stoi(is_msg);
+    }
+    return cueigen_msg_level;
+}
+
 inline void CUEIGEN_DEBUG_INFO(){
     std::cout << std::endl;
 }
+
 template<typename Ts, typename ... Rs>
 inline void CUEIGEN_DEBUG_INFO(const Ts& ts, const Rs& ... rs){
-    std::cout << ts << " ";
-    CUEIGEN_DEBUG_INFO(rs...);
-}
-
-uint32_t inline cueigen_log_level(){
-    char* is_msg = getenv("EIGEN_MSG_LEVEL");
-    if (nullptr!=is_msg){
-        cueigen_msg_level = std::stoi(is_msg);
+    if(cueigen_log_level()){
+        std::cout << ts << " ";
+        CUEIGEN_DEBUG_INFO(rs...);
     }
 }
 

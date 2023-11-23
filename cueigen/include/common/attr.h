@@ -6,10 +6,9 @@ namespace attr{
 
 class Attr{
 public:
-virtual ~Attr() = 0;
+virtual ~Attr(){}
 virtual kAttrType_t getAttrType() = 0; // op attr, graph attr, tensor attr ...
 };
-Attr::~Attr(){}
 
 class OpAttr : public Attr{
 public:
